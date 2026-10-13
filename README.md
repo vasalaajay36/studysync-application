@@ -1,210 +1,137 @@
-<div align="center">
-
 # StudySync
 
-### Student Productivity & Academic Management Platform
+A full-stack student productivity platform built with React, Vite, Java 21, Spring Boot, Spring Data JPA/Hibernate, and MySQL.
 
-A full-stack academic productivity application built with **React, Java, Spring Boot, MySQL, JPA/Hibernate, HTML, CSS, and JavaScript**.
+## Repository layout
 
-<p>
-  <a href="https://github.com/vasalaajay36/studysync">Source Code</a>
-</p>
+The frontend and backend are deliberately separated:
 
-<p>
-  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21" />
-  <img src="https://img.shields.io/badge/Spring%20Boot-4.1.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot" />
-  <img src="https://img.shields.io/badge/MySQL-9.7-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
-  <img src="https://img.shields.io/badge/JPA%20%2F%20Hibernate-ORM-59666C?style=for-the-badge&logo=hibernate&logoColor=white" alt="JPA Hibernate" />
-</p>
-
-<p>
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" />
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
-  <img src="https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven" />
-  <img src="https://img.shields.io/badge/Render-Deployment-000000?style=for-the-badge&logo=render&logoColor=white" alt="Render" />
-</p>
-
-</div>
-
----
-
-## Live Demo
-
-**Source Code:** https://github.com/vasalaajay36/studysync
-
-> Deployment target: Render Docker Web Service. A publicly reachable MySQL-compatible database must be configured separately. Add the deployed URL here after the Render deployment and database connection have been verified.
-
-## Overview
-
-StudySync is a full-stack academic productivity application designed to help students manage their academic information and study activities from one place.
-
-The application provides REST APIs and a browser-based frontend for managing:
-
-- Students
-- Tasks
-- Study sessions
-- Coding-platform profiles and statistics
-- Smart dashboard insights and weekly study analytics
-- Guided Pomodoro-style Focus Mode with short/long breaks
-- Session-protected routes and hardened authentication cookies
-- Student dashboard information
+```text
+studysync-application/
+├── frontend/                 # React + Vite application
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
+├── backend/                  # Java + Spring Boot REST API
+│   ├── src/
+│   │   ├── main/
+│   │   └── test/
+│   ├── .mvn/
+│   ├── mvnw
+│   └── pom.xml
+├── .github/
+├── Dockerfile                # Multi-stage production build
+├── railway.json
+├── render.yaml
+└── README.md
+```
 
 ## Features
 
-### Authentication and Student Accounts
+- Session-based registration, login, logout, and authenticated routes
+- BCrypt password hashing
+- Student-owned task, subject, study-session, and coding-profile data
+- Dashboard analytics and weekly study summaries
+- Pomodoro-style focus timer
+- Coding profile CRUD, with automatic statistics fetching for LeetCode and Codeforces
+- REST API validation and error handling
+- React frontend and Spring Boot backend served from one origin in production
 
-- Register with name, email, course, and password
-- Sign in with email and password
-- Passwords are stored as BCrypt hashes
-- Server-side sessions scope student data to the authenticated account
-- View and update your own student information
-- Delete your own account and associated academic data
+## Technology stack
 
-### Subject Management
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, JavaScript, HTML, CSS |
+| Backend | Java 21, Spring Boot, Spring Web MVC |
+| Persistence | Spring Data JPA, Hibernate, MySQL |
+| Validation | Jakarta Bean Validation |
+| Build | npm, Maven Wrapper |
+| Deployment | Docker, Railway/Render configuration |
 
-- Create subjects
-- View all subjects
-- View a subject by ID
-- Update subjects
-- Delete subjects
-- View subjects for a specific student
+## Run locally
 
-### Task Management
+### Prerequisites
 
-- Create tasks
-- View all tasks
-- View a task by ID
-- Update tasks
-- Delete tasks
-- View tasks for a specific student
-
-### Study Session Management
-
-- Create study sessions
-- View all study sessions
-- View a session by ID
-- Update study sessions
-- Delete study sessions
-- View study sessions for a specific student
-
-### Dashboard
-
-- Retrieve dashboard information for the authenticated student
-- Aggregate academic/productivity information through a dedicated dashboard API
-
-### Coding Platform Profiles
-
-- Save, edit, and delete coding profiles
-- Store username, profile URL, solved problems, rating, ranks, contests, streak, and highest rating
-- Automatically fetch public profile statistics for **LeetCode** and **Codeforces**
-- Save profile URLs and manually entered statistics for other supported platforms
-- Gracefully report expired sessions, invalid usernames, upstream API failures, and timeouts
-- Manually enter statistics for platforms without automatic API integration
-
-## Screenshots
-
-> Screenshots can be added here after capturing the deployed application. Recommended screenshots: Dashboard, Task Management, Subject Management, and Study Sessions.
-
-## Tech Stack
-
-### Backend
-
+- Node.js 22 and npm
 - Java 21
-- Spring Boot 4.1.1
-- Spring Web MVC
-- Spring Data JPA
-- Hibernate
-- Spring Validation
-- Maven
-- Lombok
+- MySQL, if you want to use a local database
 
-### Database
+### 1. Start the backend
 
-- MySQL
+From the repository root:
 
-### Frontend
-
-- React 19
-- Vite
-- HTML5
-- CSS3
-- JavaScript
-
-### Development & Testing
-
-- Git
-- GitHub
-- Postman
-- macOS
-
-### Deployment
-
-StudySync is configured for deployment as a Docker Web Service on Render.
-
-Production architecture:
-
-```text
-User Browser
-     |
-     v
-Render Public URL
-     |
-     v
-Spring Boot Application + bundled React frontend
-     |
-     v
-Spring Data JPA / Hibernate
-     |
-     v
-External MySQL-compatible Database
+```bash
+cd backend
+./mvnw spring-boot:run
 ```
 
-### Deploy on Render
+Configure database credentials using environment variables or your local configuration file. Do not commit credentials.
 
-1. Create a MySQL-compatible database with public network access enabled and TLS/SSL required. Keep its credentials private.
-2. In Render, select **New → Blueprint** and connect `vasalaajay36/studysync`. Render reads the root `render.yaml` and configures the Docker web service.
-3. In the StudySync service's **Environment** settings, add:
-   - `DB_URL`: JDBC URL such as `jdbc:mysql://DB_HOST:DB_PORT/DB_NAME?sslMode=REQUIRED` (replace the placeholders with the exact values supplied by your database provider).
-   - `DB_USERNAME`: database username.
-   - `DB_PASSWORD`: database password.
-   - `COOKIE_SECURE`: `true`.
-4. Save and deploy. Render builds the existing multi-stage `Dockerfile`; the React frontend and Spring Boot API share one origin.
-5. Wait for the service to become **Live**, then open its generated `onrender.com` URL. Test registration/login, navigation, task/subject/session CRUD, and coding profiles.
-6. Add the new public URL to the Live Demo section only after the deployment and database connection have been verified.
+### 2. Start the frontend
 
-Render hosts the application; the MySQL database is separate. The database provider must allow inbound connections from Render and support TLS. A database running on your own computer is not reachable by the cloud service.
+Open a second terminal at the repository root:
 
-Production credentials belong in environment variables, not in GitHub.
- 
-## Security Notes
+```bash
+cd frontend
+npm ci
+npm run dev
+```
 
-- Never commit database passwords, API keys, tokens, or other secrets.
-- Production credentials should be stored in environment variables or a managed secrets system.
-- The `application.properties` configuration supports environment variables for database connectivity.
+The Vite development server proxies `/api` requests to the backend. If your backend uses a port other than the configured proxy target, update `frontend/vite.config.js`.
 
-## Learning Goals
+### Build and test
 
-This project was built to practice and demonstrate:
+Frontend:
 
-- Java and object-oriented programming
-- Spring Boot application structure
-- Dependency injection
-- REST API development
-- HTTP methods and status codes
-- DTOs and request/response handling
-- Validation
-- Service and repository layers
-- JPA/Hibernate
-- MySQL integration
-- Exception handling
-- Frontend-to-backend communication
-- Git and GitHub
-- API testing with Postman
-- Cloud deployment
+```bash
+cd frontend
+npm ci
+npm run lint
+npm run build
+```
+
+Backend (from the repository root):
+
+```bash
+cd backend
+./mvnw clean test
+./mvnw package
+```
+
+### Build the production container
+
+Run from the repository root:
+
+```bash
+docker build -t studysync-application .
+docker run --rm -p 8080:8080 --env-file .env studysync-application
+```
+
+The Docker build creates the React assets first, then packages them with the Spring Boot application. In production, frontend and API use the same origin.
+
+## API areas
+
+- `/api/auth` — registration, login, current user, logout
+- `/api/tasks` — task management
+- `/api/subjects` — subject management
+- `/api/study-sessions` — study sessions
+- `/api/coding-platforms` — coding profiles and supported profile-stat fetching
+- `/api/dashboard` — dashboard data
+- `/health` — health check
+
+Use Postman to test protected endpoints after logging in; preserve the session cookie between requests.
+
+## Deployment notes
+
+The root `Dockerfile` is the deployment entry point, so a platform such as Railway can build the monorepo without setting its root directory to `backend/`. The backend packages `frontend/dist` as static resources. Configure database environment variables in the hosting provider, and verify the health check and authenticated flows after deployment.
+
+## Security
+
+- Never commit database passwords, API keys, tokens, or real user credentials.
+- Keep production secrets in the hosting provider's environment-variable settings.
+- Use HTTPS and secure session cookies in production.
+- Each student's records must remain scoped to their authenticated session.
 
 ## Author
 
-**Ajay Vasala**
-
-GitHub: https://github.com/vasalaajay36
+Ajay Vasala — https://github.com/vasalaajay36

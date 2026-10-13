@@ -26,12 +26,27 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
 
       - name: Build and test application
-        run: ./mvnw -B clean verify
+        working-directory: backend
+        run: ./mvnw -B -Dfrontend.skip=true clean verify
 
       - name: Publish release artifact
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: target/studysync-*.jar
+          files: backend/target/studysync-*.jar
