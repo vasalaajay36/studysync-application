@@ -52,3 +52,6 @@ jobs:
       - name: Test backend
         working-directory: backend
         run: ./mvnw -B clean test
+
+      - name: Build production Docker image
+        run: docker build --tag studysync-application:ci .
