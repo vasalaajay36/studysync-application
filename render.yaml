@@ -1,20 +1,42 @@
+databases:
+  - name: studysync-postgres
+    databaseName: studysync
+    user: studysync
+    plan: free
+    region: singapore
+    postgresMajorVersion: "16"
+
 services:
   - type: web
-    name: studysync
+    name: studysync-backend
     runtime: docker
     plan: free
     region: singapore
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     healthCheckPath: /
     autoDeploy: true
     envVars:
-      - key: DB_URL
-        sync: false
+      - key: DB_HOST
+        fromDatabase:
+          name: studysync-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: studysync-postgres
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: studysync-postgres
+          property: database
       - key: DB_USERNAME
-        sync: false
+        fromDatabase:
+          name: studysync-postgres
+          property: user
       - key: DB_PASSWORD
-        sync: false
+        fromDatabase:
+          name: studysync-postgres
+          property: password
       - key: COOKIE_SECURE
         value: "true"
       - key: JAVA_OPTS
