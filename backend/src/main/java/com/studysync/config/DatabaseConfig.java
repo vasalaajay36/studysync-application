@@ -41,9 +41,16 @@ public class DatabaseConfig {
             String configuredPassword,
             String configuredDriver) {
 
-        String databaseUrl = System.getenv("DATABASE_URL");
+        String databaseUrl = firstNonBlank(
+                System.getenv("DATABASE_URL"),
+                System.getProperty("DATABASE_URL"),
+                System.getenv("DB_URL"),
+                System.getProperty("DB_URL")
+        );
+        // Spring resolves the DB_URL property before injecting configuredUrl.
+        // This fallback also allows DB_URL to contain a provider URI.
         if (!StringUtils.hasText(databaseUrl)) {
-            databaseUrl = System.getProperty("DATABASE_URL");
+            databaseUrl = configuredUrl;
         }
 
         HikariConfig config = new HikariConfig();
@@ -52,7 +59,7 @@ public class DatabaseConfig {
         config.setInitializationFailTimeout(-1);
 
         if (databaseUrl != null && databaseUrl.contains("${")) {
-            log.warn("DATABASE_URL contains an unresolved placeholder; ignoring it");
+            log.warn("Database URL contains an unresolved placeholder; using configured datasource fallback");
             databaseUrl = null;
         }
 
@@ -91,7 +98,7 @@ public class DatabaseConfig {
                             ? "com.mysql.cj.jdbc.Driver"
                             : "org.postgresql.Driver");
 
-                    String userInfo = uri.getRawUserInfo();
+                    String userInfo = uri.getUserInfo();
                     if (StringUtils.hasText(userInfo)) {
                         String[] credentials = userInfo.split(":", 2);
                         config.setUsername(credentials[0]);
@@ -118,6 +125,15 @@ public class DatabaseConfig {
             config.setDriverClassName(configuredDriver);
         }
         return config;
+    }
+
+    private String firstNonBlank(String... values) {
+        for (String value : values) {
+            if (StringUtils.hasText(value)) {
+                return value.trim();
+            }
+        }
+        return null;
     }
 
     private void configureDriver(HikariConfig config, String url) {
