@@ -15,6 +15,7 @@ WORKDIR /app
 
 COPY backend/ ./backend/
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist
+COPY --from=frontend-build /app/frontend/dist/ ./backend/src/main/resources/static/
 
 WORKDIR /app/backend
 RUN mvn -B -DskipTests -Dfrontend.skip=true clean package
