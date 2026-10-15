@@ -13,6 +13,7 @@ class DatabaseConfigTest {
     @AfterEach
     void clearDatabaseUrl() {
         System.clearProperty("DATABASE_URL");
+        System.clearProperty("DB_URL");
     }
 
     @Test
@@ -28,6 +29,21 @@ class DatabaseConfigTest {
     @Test
     void parsesRenderPostgresConnectionString() {
         System.setProperty("DATABASE_URL",
+                "postgresql://renderuser:secretpass@db.internal:5432/studysync_db?sslmode=require");
+
+        HikariConfig config = databaseConfig.resolveConfig(null, null, null, null);
+
+        assertEquals(
+                "jdbc:postgresql://db.internal:5432/studysync_db?sslmode=require",
+                config.getJdbcUrl());
+        assertEquals("renderuser", config.getUsername());
+        assertEquals("secretpass", config.getPassword());
+        assertEquals("org.postgresql.Driver", config.getDriverClassName());
+    }
+
+    @Test
+    void parsesRenderPostgresConnectionStringFromDbUrl() {
+        System.setProperty("DB_URL",
                 "postgresql://renderuser:secretpass@db.internal:5432/studysync_db?sslmode=require");
 
         HikariConfig config = databaseConfig.resolveConfig(null, null, null, null);
