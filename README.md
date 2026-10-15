@@ -43,7 +43,7 @@ studysync-application/
 |---|---|
 | Frontend | React, Vite, JavaScript, HTML, CSS |
 | Backend | Java 21, Spring Boot, Spring Web MVC |
-| Persistence | Spring Data JPA, Hibernate, MySQL |
+| Persistence | Spring Data JPA, Hibernate, PostgreSQL or MySQL |
 | Validation | Jakarta Bean Validation |
 | Build | npm, Maven Wrapper |
 | Deployment | Docker, Railway/Render configuration |
@@ -65,7 +65,7 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-Configure database credentials using environment variables or your local configuration file. Do not commit credentials.
+Configure database credentials using environment variables or your local configuration file. Do not commit credentials. `DB_URL` can be a JDBC URL or a provider URI (`postgresql://`, `postgres://`, or `mysql://`); `DATABASE_URL` is also supported and takes precedence. Set `DB_USERNAME` and `DB_PASSWORD` when credentials are not embedded in the URL.
 
 ### 2. Start the frontend
 
@@ -123,7 +123,7 @@ Use Postman to test protected endpoints after logging in; preserve the session c
 
 ## Deployment notes
 
-The root `Dockerfile` is the deployment entry point, so a platform such as Railway can build the monorepo without setting its root directory to `backend/`. The backend packages `frontend/dist` as static resources. Configure database environment variables in the hosting provider, and verify the health check and authenticated flows after deployment.
+The root `Dockerfile` builds the frontend and backend from the monorepo. The Render blueprint in `render.yaml` deploys the backend separately, while `frontend/vercel.json` proxies `/api/*` to the Render service. The database is not automatically provisioned by the current Render blueprint: configure `DB_URL` (or `DATABASE_URL`) and, if needed, `DB_USERNAME` and `DB_PASSWORD` in the hosting provider. The Railway service also needs a database connection configured before its `/health` check can pass. Verify registration, login/session cookies, CRUD pages, analytics, and coding-profile fetch/save after deployment.
 
 ## Security
 
